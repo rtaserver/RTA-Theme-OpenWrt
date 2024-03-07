@@ -3,7 +3,7 @@ a = Map("rtaconfig")
 a.title = translate("RTA Theme Config")
 a.description = translate("Set and manage features such as RTA themed background wallpaper, main background color, partition background, transparency, blur, toolbar retraction and shortcut pointing.</br>")..
 translate("There are 6 preset color schemes, and only the desktop background image can be set to display or not. The custom color values are RGB values such as 255,0,0 (representing red), and a blur radius of 0 indicates no lag in the image.")..
-translate("</br>For specific usage, see:")..translate("<a href=\'https://github.com/rtaserver/luci-app-rtaconfig.git' target=\'_blank\'>GitHub @rtaserver/luci-app-rtaconfig </a>")
+translate("</br>For specific usage, see:")..translate("<a href=\'https://github.com/rtaserver/RTA-Theme-OpenWrt.git' target=\'_blank\'>GitHub @rtaserver/RTA-Theme-OpenWrt </a>")
 t = a:section(TypedSection, "basic", translate("Settings"))
 t.anonymous = true
 
