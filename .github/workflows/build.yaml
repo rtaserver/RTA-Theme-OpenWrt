@@ -9,7 +9,7 @@ on:
         default: 'false'
   push:
     branches:
-      - 'main'
+      - 'dev'
 env:
   TZ: Asia/Jakarta
 
