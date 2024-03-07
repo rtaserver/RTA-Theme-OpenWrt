@@ -1,0 +1,11 @@
+{
+	"luci-app-rtaconfig": {
+		"description": "Grant UCI access for luci-app-rtaconfig",
+		"read": {
+			"uci": [ "rtaconfig" ]
+		},
+		"write": {
+			"uci": [ "rtaconfig" ]
+		}
+	}
+}

@@ -1,0 +1,236 @@
+#!/bin/sh /etc/rc.common
+# Copyright 2024 rtaserver team <rizkidhc31@gmail.com>
+
+START=99
+STOP=15
+EXTRA_COMMANDS='reset'
+EXTRA_HELP="        reset   Reset to default settings"
+
+
+reset() {
+rm -rf /etc/config/rtaconfig
+cat <<EOF  >/etc/config/rtaconfig
+
+config basic
+	option gossr 'openclash'
+	option gouser 'rtaconfig'
+	option gohome 'overview'
+	option fontmode '0'
+	option font_d '1.1rem'
+	option font_z '0.92rem'
+	option font_x '0.875rem'
+	option bklock '1'
+	option setbar '1'
+	option primary_opacity '0'
+	option background '0'
+	option bkuse '1'
+	option bgqs '1'
+	option dayword '1'
+	option mode 'light'
+	option primary_rgbbody '248,248,248'
+	option primary_rgbm '20,109,179'
+	option primary_rgbm_ts '0.9'
+	option primary_rgbs '28,66,188'
+	option primary_rgbs_ts '0.1'
+
+config theme
+	option primary_rgbbody '33,45,60'
+	option primary_rgbs '76,157,69'
+	option primary_rgbm_ts '0.9'
+	option primary_opacity '0'
+	option bkuse '1'
+	option remarks 'Partition classic blue'
+	option primary_rgbm 'blue'
+	option mode 'light'
+	option use '1'
+	option primary_rgbs_ts '0.1'
+
+config theme
+	option primary_rgbbody '33,45,60'
+	option mode 'light'
+	option primary_rgbs '76,157,69'
+	option primary_rgbm_ts '0.9'
+	option primary_opacity '0'
+	option primary_rgbm 'green'
+	option bkuse '0'
+	option primary_rgbs_ts '0'
+	option remarks 'Refreshing green without barriers'
+	option use '0'
+
+config theme
+	option primary_rgb_ts '0.3'
+	option primary_opacity '0'
+	option primary_rgbm '26,131,97'
+	option primary_rgbs '76 157 69'
+	option bkuse '1'
+	option primary_rgbs_ts '0'
+	option remarks 'No fence green'
+	option primary_rgbm_ts '0.8'
+	option mode 'light'
+	option use '0'
+
+config theme
+	option primary_rgbm '66,139,139'
+	option primary_rgbs 'rgb(55,103,128)'
+	option mode 'light'
+	option primary_opacity '0'
+	option primary_rgbs_ts '0.1'
+	option primary_rgbm_ts '1'
+	option remarks 'Barrier without background blue'
+	option use '0'
+	option bkuse '0'
+
+config theme
+	option primary_rgbm '50 67 77'
+	option primary_rgbs 'rgb(64, 68, 70)'
+	option primary_opacity '0'
+	option primary_rgbm_ts '0.9'
+	option mode 'dark'
+	option bkuse '0'
+	option remarks 'Dark without barriers'
+	option use '0'
+	option primary_rgbs_ts '0'
+
+config theme
+	option bkuse '1'
+	option primary_rgbs_ts '0.3'
+	option mode 'dark'
+	option primary_rgbm '50 66 77'
+	option primary_opacity '0'
+	option primary_rgbm_ts '0.9'
+	option primary_rgbs '55 80 90'
+	option remarks 'Dark background partition'
+	option use '0'
+
+config theme
+	option mode 'light'
+	option primary_rgbm '74,161,133'
+	option bkuse '1'
+	option primary_rgbs '76 157 69'
+	option primary_rgbs_ts '0'
+	option primary_rgbm_ts '0.4'
+	option remarks 'Blurred green without barriers'
+	option primary_opacity '10'
+	option use '0'
+
+
+EOF
+}
+cpumodeset()
+{
+for i in 0 1 2 3 ;do
+   echo $1 > /sys/devices/system/cpu/cpufreq/policy$i/scaling_governor
+done
+}
+
+rtaset(){
+sum=$(grep -c 'theme' /etc/config/rtaconfig)
+useset=0
+for i in $(seq 0 $((sum-1)))
+do
+    use=$(uci -q get rtaconfig.@theme[$i].use )
+    
+    if [ "x$use" = "x1" ]; then
+	mode=`uci -q get rtaconfig.@theme[$i].mode`
+	primary_rgbm=`uci -q get rtaconfig.@theme[$i].primary_rgbm`
+	uci set rtaconfig.@basic[0].mode=${mode}
+	case "$primary_rgbm" in
+		blue)
+			uci set rtaconfig.@basic[0].primary_rgbm='20,109,179'
+			uci set rtaconfig.@basic[0].bkuse=`uci -q get rtaconfig.@theme[$i].bkuse`
+			uci set rtaconfig.@basic[0].primary_rgbm_ts='0.9'
+			uci set rtaconfig.@basic[0].primary_opacity='0'
+			uci set rtaconfig.@basic[0].primary_rgbs_ts=`uci -q get rtaconfig.@theme[$i].primary_rgbs_ts`
+			uci set rtaconfig.@basic[0].primary_rgbs='28,66,188'
+ 			[ $mode = dark ] && uci set rtaconfig.@basic[0].primary_rgbbody='33,45,60' || uci set rtaconfig.@basic[0].primary_rgbbody='248,248,248'
+		;;
+		green)
+			uci set rtaconfig.@basic[0].bkuse=`uci -q get rtaconfig.@theme[$i].bkuse`
+			uci set rtaconfig.@basic[0].primary_rgbm_ts='0.9'
+			uci set rtaconfig.@basic[0].primary_opacity='0'
+			uci set rtaconfig.@basic[0].primary_rgbm='26,131,97'
+			uci set rtaconfig.@basic[0].primary_rgbs_ts=`uci -q get rtaconfig.@theme[$i].primary_rgbs_ts`
+			uci set rtaconfig.@basic[0].primary_rgbs='76,157,69'
+ 			[ $mode = dark ] && uci set rtaconfig.@basic[0].primary_rgbbody='33,45,60' || uci set rtaconfig.@basic[0].primary_rgbbody='248,248,248'
+		;;
+		orange)
+			uci set rtaconfig.@basic[0].bkuse=`uci -q get rtaconfig.@theme[$i].bkuse`
+			uci set rtaconfig.@basic[0].primary_rgbm_ts='0.9'
+			uci set rtaconfig.@basic[0].primary_opacity='0'
+			uci set rtaconfig.@basic[0].primary_rgbm='163,71,6'
+			uci set rtaconfig.@basic[0].primary_rgbs_ts=`uci -q get rtaconfig.@theme[$i].primary_rgbs_ts`
+			uci set rtaconfig.@basic[0].primary_rgbs='142,93,8'
+ 			[ $mode = dark ] && uci set rtaconfig.@basic[0].primary_rgbbody='33,45,60' || uci set rtaconfig.@basic[0].primary_rgbbody='248,248,248'
+		;;
+		red)
+			uci set rtaconfig.@basic[0].bkuse=`uci -q get rtaconfig.@theme[$i].bkuse`
+			uci set rtaconfig.@basic[0].primary_rgbm_ts='0.9'
+			uci set rtaconfig.@basic[0].primary_opacity='0'
+			uci set rtaconfig.@basic[0].primary_rgbm='143,32,13'
+			uci set rtaconfig.@basic[0].primary_rgbs_ts=`uci -q get rtaconfig.@theme[$i].primary_rgbs_ts`
+			uci set rtaconfig.@basic[0].primary_rgbs='243,119,72'
+ 			[ $mode = dark ] && uci set rtaconfig.@basic[0].primary_rgbbody='33,45,60' || uci set rtaconfig.@basic[0].primary_rgbbody='248,248,248'
+		;;
+		gray)
+			uci set rtaconfig.@basic[0].bkuse=`uci -q get rtaconfig.@theme[$i].bkuse`
+			uci set rtaconfig.@basic[0].primary_rgbm_ts='0.9'
+			uci set rtaconfig.@basic[0].primary_opacity='0'
+			uci set rtaconfig.@basic[0].primary_rgbm='50,67,77'
+			uci set rtaconfig.@basic[0].primary_rgbs_ts=`uci -q get rtaconfig.@theme[$i].primary_rgbs_ts`
+			uci set rtaconfig.@basic[0].primary_rgbs='55,90,100'
+ 			[ $mode = dark ] && uci set rtaconfig.@basic[0].primary_rgbbody='33,45,60' || uci set rtaconfig.@basic[0].primary_rgbbody='248,248,248'
+		;;
+		bluets)
+			uci set rtaconfig.@basic[0].bkuse=`uci -q get rtaconfig.@theme[$i].bkuse`
+			uci set rtaconfig.@basic[0].primary_rgbm_ts='0.5'
+			uci set rtaconfig.@basic[0].primary_opacity='100'
+			uci set rtaconfig.@basic[0].primary_rgbm='66,139,139'
+			uci set rtaconfig.@basic[0].primary_rgbs_ts=`uci -q get rtaconfig.@theme[$i].primary_rgbs_ts`
+			uci set rtaconfig.@basic[0].primary_rgbs='55,103,128'
+ 			[ $mode = dark ] && uci set rtaconfig.@basic[0].primary_rgbbody='33,45,60' || uci set rtaconfig.@basic[0].primary_rgbbody='248,248,248'
+		;;
+		*)
+			uci set rtaconfig.@basic[0].bkuse=`uci -q get rtaconfig.@theme[$i].bkuse`
+			uci set rtaconfig.@basic[0].primary_rgbm_ts=`uci -q get rtaconfig.@theme[$i].primary_rgbm_ts`
+			uci set rtaconfig.@basic[0].primary_opacity=`uci -q get rtaconfig.@theme[$i].primary_opacity`
+			uci set rtaconfig.@basic[0].primary_rgbm=`echo $primary_rgbm | sed 's#(##; s#)##g; s#rgb##g; s#\,\ #\,#g;s#\ #\,#g;'`
+			uci set rtaconfig.@basic[0].primary_rgbs=`uci -q get rtaconfig.@theme[$i].primary_rgbs | sed 's#(##; s#)##g; s#rgb##g; s#\,\ #\,#g;s#\ #\,#g;'`
+			uci set rtaconfig.@basic[0].primary_rgbs_ts=`uci -q get rtaconfig.@theme[$i].primary_rgbs_ts`
+ 			[ $mode = dark ] && uci set rtaconfig.@basic[0].primary_rgbbody='33,45,60' || uci set rtaconfig.@basic[0].primary_rgbbody='248,248,248'
+ 		;;
+	esac
+	useset=1
+	break
+    fi
+done
+if [ "x$useset" = "x0" ] ; then
+	uci set rtaconfig.@basic[0].mode='light'
+	uci set rtaconfig.@basic[0].primary_rgbm='74,161,133'
+	uci set rtaconfig.@basic[0].primary_rgbs_ts='0.3'
+	uci set rtaconfig.@basic[0].primary_rgbs='225,112,88'
+	uci set rtaconfig.@basic[0].bkuse='1'
+	uci set rtaconfig.@basic[0].primary_rgbm_ts='0.9'
+	uci set rtaconfig.@basic[0].primary_opacity='50'
+ 	[ $mode = dark ] && uci set rtaconfig.@basic[0].primary_rgbbody='33,45,60' || uci set rtaconfig.@basic[0].primary_rgbbody='248,248,248'
+fi
+if [ "x$(uci -q get rtaconfig.@basic[0].fontmode)" = "x1" ] ; then
+	uci set rtaconfig.@basic[0].font_d='1.3rem'
+	uci set rtaconfig.@basic[0].font_z='1.1rem'
+	uci set rtaconfig.@basic[0].font_x='0.92rem'
+else
+	uci set rtaconfig.@basic[0].font_d='1.1rem'
+	uci set rtaconfig.@basic[0].font_z='0.92rem'
+	uci set rtaconfig.@basic[0].font_x='0.875rem'
+fi
+uci commit rtaconfig
+}
+
+start() {
+    [ -f /etc/config/rtaconfig ] || /etc/config/rtaconfig reset  
+    rtaset
+    rm -rf /tmp/luci-*
+}
+
+stop() {
+rm -rf /tmp/luci*
+}
