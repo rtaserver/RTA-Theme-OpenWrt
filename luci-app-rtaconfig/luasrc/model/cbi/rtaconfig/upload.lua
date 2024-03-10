@@ -23,7 +23,7 @@ function glob(...)
     end
 end
 
-ful = SimpleForm('upload', translate('Upload  (Free: ') .. wa.byte_format(free_byte) .. ')', translate("You can upload files such as jpg,png,gif files, To change the login page background.Uploading Kucat, Agron, and Opentopd all three themes can be used once"))
+ful = SimpleForm('upload', translate('Upload  (Free: ') .. wa.byte_format(free_byte) .. ')', translate("You can upload files such as jpg,png,gif files, To change the login page background.Uploading RTA, Agron, and Opentopd all three themes can be used once"))
 ful.reset = false
 ful.submit = false
 
