@@ -626,20 +626,20 @@ span[data-indicator="poll-status"] {
 
 span[data-indicator="uci-changes"]:before {
     font-size: 1.5rem !important;
-    font-family: 'kucat' !important;
+    font-family: 'rta' !important;
     content: "\e923";
     color: #ffb923;
     text-decoration: none;
 }
 span[data-indicator="poll-status"]:not([data-style="inactive"]):before {
     font-size: 1.5rem !important;
-    font-family: 'kucat' !important;
+    font-family: 'rta' !important;
     content: "\e936";
     color: #ffffff;
     text-decoration: none;
 }
 span[data-indicator="poll-status"]:not([data-style="active"]):before {
-    font-family: 'kucat' !important;
+    font-family: 'rta' !important;
     font-size: 1.5rem !important;
     content: "\e932";
     color: #aaa !important;
@@ -706,7 +706,7 @@ text-decoration: none!important;
 .showWord::before,
 .showWord::after,
 [class^="pdboy-"]:before, [class*=" pdboy-"]:before, [class^="pdboy-"]:after, [class*=" pdboy-"]:after {
-	font-family: 'kucat' !important;
+	font-family: 'rta' !important;
 	font-style: normal !important;
 	font-weight: normal !important;
 	font-variant: normal !important;
@@ -816,7 +816,7 @@ text-decoration: none!important;
 	color: var(--menu-hover-color);
 }
 .main .main-left .nav>li>a:first-child::before {
-	font-family: 'kucat' !important;
+	font-family: 'rta' !important;
 	font-style: normal;
 	font-weight: normal;
 	font-variant: normal;
@@ -830,7 +830,7 @@ text-decoration: none!important;
 	color: var(--menu-color)
 }
 .main .main-left .nav>.slide>a::before, .main .main-left .nav>li>a::before {
-	font-family: 'kucat' !important;
+	font-family: 'rta' !important;
 	font-style: normal;
 	font-weight: normal;
 	font-variant: normal;
@@ -847,7 +847,7 @@ text-decoration: none!important;
 	position: absolute;
 	right: .6rem;
 	top: 1rem;
-	font-family: 'kucat' !important;
+	font-family: 'rta' !important;
 	font-style: normal;
 	font-weight: normal;
 	font-variant: normal;
@@ -1282,7 +1282,7 @@ background-image: url("data:image/svg+xml;base64,PCEtLSBHZW5lcmF0ZWQgYnkgSWNvTW9
 }
 
 .cbi-button-up, .cbi-button-down, .cbi-value-helpicon, .showSide, .main > .loading > span {
-	font-family: 'kucat' !important;
+	font-family: 'rta' !important;
 	font-style: normal !important;
 	font-weight: normal !important;
 	font-variant: normal !important;
@@ -2659,7 +2659,7 @@ body.lang_pl.node-main-login .cbi-value-title {
 	width: 14rem
 }
 .node-main-login>.main .cbi-value.cbi-value .cbi-value-field:before {
-	font-family: 'kucat' !important;
+	font-family: 'rta' !important;
 	speak: none;
 	font-style: normal;
 	font-weight: normal;
@@ -2678,7 +2678,7 @@ body.lang_pl.node-main-login .cbi-value-title {
 	top: 10px
 }
 .node-main-login>.main .cbi-value.cbi-value-last .cbi-value-field:before {
-	font-family: 'kucat' !important;
+	font-family: 'rta' !important;
 	speak: none;
 	font-style: normal;
 	font-weight: normal;

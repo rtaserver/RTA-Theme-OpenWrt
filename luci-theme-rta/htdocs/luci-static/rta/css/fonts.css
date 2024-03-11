@@ -19,12 +19,12 @@
  */
 
 @font-face {
-  font-family: 'kucat';
-  src:  url('../fonts/kucat.eot?9qz8zf');
-  src:  url('../fonts/kucat.eot?9qz8zf#iefix') format('embedded-opentype'),
-    url('../fonts/kucat.ttf?9qz8zf') format('truetype'),
-    url('../fonts/kucat.woff?9qz8zf') format('woff'),
-    url('../fonts/kucat.svg?9qz8zf#kucat') format('svg');
+  font-family: 'rta';
+  src:  url('../fonts/rta.eot?9qz8zf');
+  src:  url('../fonts/rta.eot?9qz8zf#iefix') format('embedded-opentype'),
+    url('../fonts/rta.ttf?9qz8zf') format('truetype'),
+    url('../fonts/rta.woff?9qz8zf') format('woff'),
+    url('../fonts/rta.svg?9qz8zf#rta') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -32,7 +32,7 @@
 
 [class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'kucat' !important;
+  font-family: 'rta' !important;
   speak: never;
   font-style: normal;
   font-weight: normal;
