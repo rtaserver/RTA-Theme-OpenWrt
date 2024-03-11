@@ -11,7 +11,7 @@ THEME_TITLE:=RTA Theme
 PKG_NAME:=luci-theme-$(THEME_NAME)
 LUCI_TITLE:=RTA Theme by rtaserver
 LUCI_DEPENDS:=
-PKG_VERSION:=1.0.1
+PKG_VERSION:=1.0.2
 PKG_RELEASE:=10032024
 
 define Package/luci-theme-$(THEME_NAME)/postinst
