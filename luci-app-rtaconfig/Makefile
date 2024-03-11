@@ -8,7 +8,6 @@ NAME:=rtaconfig
 PKG_NAME:=luci-app-$(NAME)
 LUCI_TITLE:=LuCI support for RTA theme setting by rtaserver
 LUCI_DEPENDS:=+luci-compat +curl
-PKG_VERSION:=1.0.2
 LUCI_PKGARCH:=all
 
 
