@@ -56,6 +56,17 @@ jobs:
     needs: job_check
     runs-on: ubuntu-latest
     steps:
+      - name: Add changelog info to new release description
+        if: github.event.inputs.upload-artifacts == 'false'
+        id: changelog
+        shell: bash
+        run: |
+          r=$(awk '/^\*\*Changelog\*\*/ {if(found) exit; found=1} found' CHANGELOG.md)
+          r="${r//'%'/'%25'}"
+          r="${r//$'\n'/'%0A'}"
+          r="${r//$'\r'/'%0D'}"  
+          echo "CHANGELOG=$r" >> $GITHUB_OUTPUT
+
       - name: Install packages
         run: |
           echo "Install packages"
@@ -105,19 +116,6 @@ jobs:
         with:
           name: OpenWrt RTA Theme | Version ${{needs.job_check.outputs.rta_version}}
           path: ${{ env.FIRMWARE }}/base/*.ipk
-
-
-      - name: Add changelog info to new release description
-        if: github.event.inputs.upload-artifacts == 'false'
-        id: changelog
-        shell: bash
-        run: |
-          cd ..
-          r=$(awk '/^\*\*Changelog\*\*/ {if(found) exit; found=1} found' CHANGELOG.md)
-          r="${r//'%'/'%25'}"
-          r="${r//$'\n'/'%0A'}"
-          r="${r//$'\r'/'%0D'}"  
-          echo "CHANGELOG=$r" >> $GITHUB_OUTPUT
 
       - name: Upload Firmware to Release
         uses: svenstaro/upload-release-action@v2
