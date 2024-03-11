@@ -28,40 +28,12 @@ get_word() {
 	[ -s "/etc/config/rtaconfig" ] &&rta='rtaconfig'
 	dayword="$(uci -q get $rta.@basic[0].dayword || echo '0')"
 	case "$dayword" in
-	1)
-		[ "X$LANG" == "Xen" ] && gwordjson=`curl -s 'https://open.iciba.com/dsapi/' | jsonfilter -qe '@.content'` ||  gwordjson=`curl -s 'https://open.iciba.com/dsapi/' | jsonfilter -qe '@.note'`
-		[ -n "${gwordjson}" ] && echo "$gwordjson"
-		;;
-	2)
-	# form iciba : https://api.vvhan.com/api/en
-		[ "X$LANG" == "Xen" ] && gwordjson=`curl -s 'https://api.vvhan.com/api/en?type=sj'| jsonfilter -qe '@.data.zh'` || gwordjson=`curl -s 'https://api.vvhan.com/api/en?type=sj'| jsonfilter -qe '@.data.en'` 
-		[ -n "${gwordjson}" ] && echo "$gwordjson"
-		;;
-	3)
-		local gwordjson=`curl -s 'https://api.yixiangzhilv.com/yiyan/sentence/get/'` 
-		local gword=`echo $gwordjson | jsonfilter -qe '@.content'`
-		local gfrom=`echo $gwordjson | jsonfilter -qe '@.author'`
-		[ -n "${gfrom}" ] && gfrom=$(echo "         ---- $gfrom")|| gfrom=''
-		[ -n "${gword}" ] && echo "$gword       $gfrom"
-		;;
-	4)
-		local gwordjson=`curl -s 'https://yijuzhan.com/api/word.php?m=json'` 
+	*)
+		local gwordjson=`curl -s 'https://raw.githubusercontent.com/rtaserver/RTA-Theme-OpenWrt/main/Kata-kata_hari_ini.json'` 
 		local gword=`echo $gwordjson | jsonfilter -qe '@.content'`
 		local gfrom=`echo $gwordjson | jsonfilter -qe '@.source'`
 		[ -n "${gfrom}" ] && gfrom=$(echo "    ---- $gfrom")|| gfrom=''
 		[ -n "${gword}" ] && echo "$gword     $gfrom"
-		;;
-	5)
-		local gword=`curl -s https://v.api.aa1.cn/api/api-wenan-dujitang/index.php?aa1=json | sed 's/\[//g' | sed 's/\]//g'| jsonfilter -qe '@.dujitang'` 
-		[ -n "${gword}" ] && echo "$gword"
-		;;
-	
-	*)
-		local gwordjson=`curl -s 'https://v1.hitokoto.cn'` 
-		local gword=`echo $gwordjson | jsonfilter -qe '@.hitokoto'`
-		local gfrom=`echo $gwordjson | jsonfilter -qe '@.from_who'`
-		[ -n "${gfrom}" ] && gfrom=$(echo "    ---- $gfrom")|| gfrom=''
-		[ -n "${gword}" ] &&   echo "$gword     $gfrom"
 		;;
 	esac
 }
@@ -86,7 +58,7 @@ if [ -f "$WORDDATETMP" ]; then
 		    [ -s "$WORDTMP" ] && cat $WORDTMP && return
 		fi
 	fi
-local checknet=`ping -c 1 -W 1 223.5.5.5 > /dev/null 2>&1 &&echo 1 || echo 2`
+local checknet=`ping -c 1 -W 1 8.8.8.8 > /dev/null 2>&1 &&echo 1 || echo 2`
 if [ "x$checknet" == "x1" ]; then 
 	rtaword
 else
