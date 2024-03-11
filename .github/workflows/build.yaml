@@ -7,9 +7,16 @@ on:
         description: 'SSH connection to Actions'
         required: false
         default: 'false'
-  push:
-    branches:
-      - 'main'
+      upload-artifacts:
+        description: "Upload compiled image to Artifacts only"
+        required: false
+        default: false
+        type: boolean
+      upload-prerelease:
+          description: "Upload as pre-release"
+          required: false
+          default: false
+          type: boolean
 env:
   TZ: Asia/Jakarta
 
@@ -42,6 +49,17 @@ jobs:
           echo "latest_version: ${latest_version}"
           echo "latest_release: ${latest_release}"
           echo "has_update: ${has_update}"
+
+      - name: Add changelog info to new release description
+        if: github.event.inputs.upload-artifacts == 'false'
+        id: changelog
+        shell: bash
+        run: |
+          r=$(awk '/^\*\*Changelog\*\*/ {if(found) exit; found=1} found' CHANGELOG.md)
+          r="${r//'%'/'%25'}"
+          r="${r//$'\n'/'%0A'}"
+          r="${r//$'\r'/'%0D'}"  
+          echo "CHANGELOG=$r" >> $GITHUB_OUTPUT
 
   job_build_rta:
     name: Build RTA (main)
@@ -89,16 +107,33 @@ jobs:
           cd ..
           echo "status=success" >> $GITHUB_OUTPUT
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+          echo "DATETIME=$(date +'%Y.%m.%d-%H:%M:%S')" >> $GITHUB_ENV
 
-      - name: Upload RTA (main) ipks to release
-        uses: softprops/action-gh-release@v1
-        if: steps.compile.outputs.status == 'success'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload All Firmware to Artifacts
+        if: github.event.inputs.upload-artifacts == 'true'
+        uses: actions/upload-artifact@v4
         with:
           name: OpenWrt RTA Theme | Version ${{needs.job_check.outputs.rta_version}}
-          tag_name: ${{needs.job_check.outputs.rta_version}}
-          files: ${{ env.FIRMWARE }}/base/*.ipk
+          path: ${{ env.FIRMWARE }}/base/*.ipk
+
+      - name: Upload Firmware to Release
+        uses: svenstaro/upload-release-action@v2
+        if: github.event.inputs.upload-artifacts == 'false'
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file_glob: true
+          file: ${{ env.FIRMWARE }}/base/*.ipk
+          asset_name: ${{ github.event.repository.name }}-${{ github.sha }}
+          tag: ${{needs.job_check.outputs.rta_version}}
+          release_name: OpenWrt RTA Theme | Version ${{needs.job_check.outputs.rta_version}}
+          overwrite: true
+          prerelease: ${{ inputs.upload-prerelease }}
+          body: |
+            ![GitHub Downloads (all assets, specific tag)](https://img.shields.io/github/downloads/rtaserver/RTA-Theme-OpenWrt/${{needs.job_check.outputs.rta_version}}/total?style=for-the-badge&logo=Openwrt)
+            ### RTA Theme OpenWrt
+            Build date: ${{ env.DATETIME }}
+              
+            ${{ steps.changelog.outputs.CHANGELOG }}
 
       - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@v2.0.3
